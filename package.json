@@ -1,5 +1,6 @@
 {
   "name": "try-langchainjs",
+  "type": "module",
   "scripts": {
     "eslint": "eslint src",
     "eslint:fix": "eslint src",
@@ -8,7 +9,7 @@
     "prepare": "husky",
     "prettier": "npx prettier --check .",
     "prettier:fix": "npx prettier --write .",
-    "start": "node index.js"
+    "start": "node src/index.js"
   },
   "dependencies": {
     "@eslint/js": "^9.11.1",
@@ -16,7 +17,8 @@
     "@langchain/google-genai": "^0.1.0",
     "eslint": "^9.11.1",
     "globals": "^15.10.0",
-    "langchain": "^0.3.2"
+    "langchain": "^0.3.2",
+    "zod": "^3.23.8"
   },
   "devDependencies": {
     "husky": "^9.1.6",
