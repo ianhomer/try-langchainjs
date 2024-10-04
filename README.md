@@ -8,5 +8,5 @@ Explore LangChain.js
 
 Set your API KEY
 
-    pnpm install 
+    pnpm install
     pnpm start
