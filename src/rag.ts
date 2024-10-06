@@ -1,16 +1,16 @@
-import { CheerioWebBaseLoader } from "@langchain/community/document_loaders/web/cheerio";
+import { TextLoader } from "langchain/document_loaders/fs/text";
 import { GoogleGenerativeAIEmbeddings } from "@langchain/google-genai";
 import { RecursiveCharacterTextSplitter } from "@langchain/textsplitters";
 import { MemoryVectorStore } from "langchain/vectorstores/memory";
+import { Annotation } from "@langchain/langgraph";
+import { BaseMessage } from "@langchain/core/messages";
+import { createRetrieverTool } from "langchain/tools/retriever";
+import { ToolNode } from "@langchain/langgraph/prebuilt";
 
-const urls = [
-  "https://lilianweng.github.io/posts/2023-06-23-agent/",
-  "https://lilianweng.github.io/posts/2023-03-15-prompt-engineering/",
-  "https://lilianweng.github.io/posts/2023-10-25-adv-attack-llm/",
-];
+const filenames = ["src/index.ts", "src/rag.ts", "src/structured-output.ts"];
 
 const docs = await Promise.all(
-  urls.map((url) => new CheerioWebBaseLoader(url).load()),
+  filenames.map((filename) => new TextLoader(filename).load()),
 );
 const docsList = docs.flat();
 
@@ -27,4 +27,21 @@ const vectorStore = await MemoryVectorStore.fromDocuments(
 );
 
 const retriever = vectorStore.asRetriever();
-console.log(retriever);
+
+const GraphState = Annotation.Root({
+  messages: Annotation<BaseMessage[]>({
+    reducer: (x, y) => x.concat(y),
+    default: () => [],
+  }),
+});
+console.log(GraphState.State);
+
+const tool = createRetrieverTool(retriever, {
+  name: "retrieve_blog_posts",
+  description: "Search and return information about local files.",
+});
+const tools = [tool];
+
+const toolNode = new ToolNode<typeof GraphState.State>(tools);
+
+console.log(toolNode);

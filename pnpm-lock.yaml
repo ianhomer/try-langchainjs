@@ -16,6 +16,9 @@ importers:
       "@langchain/google-genai":
         specifier: ^0.1.0
         version: 0.1.0(@langchain/core@0.3.7(openai@4.67.1(zod@3.23.8)))(zod@3.23.8)
+      "@langchain/langgraph":
+        specifier: ^0.2.11
+        version: 0.2.11(@langchain/core@0.3.7(openai@4.67.1(zod@3.23.8)))
       "@langchain/openai":
         specifier: ^0.3.5
         version: 0.3.5(@langchain/core@0.3.7(openai@4.67.1(zod@3.23.8)))
@@ -526,6 +529,24 @@ packages:
     peerDependencies:
       "@langchain/core": ">=0.2.21 <0.4.0"
 
+  "@langchain/langgraph-checkpoint@0.0.9":
+    resolution:
+      {
+        integrity: sha512-9KrTxnKqTCRDxYOsvQ4UOuM878S1Sp4ZUejfGBdZc9yaWGzRGV4aEYJGt8GDSBwBUYd7gz2gNi+q4xtxvwIZig==,
+      }
+    engines: { node: ">=18" }
+    peerDependencies:
+      "@langchain/core": ">=0.2.31 <0.4.0"
+
+  "@langchain/langgraph@0.2.11":
+    resolution:
+      {
+        integrity: sha512-gfjtXDuQ9J7ybyN6oWH/fNcW5DteWlgnO9FJZBJLVInp3tXrT277a/N8IVGqq1Kbm/xLDXdKh6ckJkmhJUHqBg==,
+      }
+    engines: { node: ">=18" }
+    peerDependencies:
+      "@langchain/core": ">=0.2.31 <0.4.0"
+
   "@langchain/openai@0.3.5":
     resolution:
       {
@@ -1035,6 +1056,12 @@ packages:
     resolution:
       {
         integrity: sha512-H78uMmQtI2AhgDJjWeQmHwJJ2bLPD3GMmO7Zja/ZZh84wkm+4ut+IUnUdRa8uCGX88DiVx1j6FRe1XfxEgjEZA==,
+      }
+
+  double-ended-queue@2.1.0-0:
+    resolution:
+      {
+        integrity: sha512-+BNfZ+deCo8hMNpDqDnvT+c0XpJ5cUa6mqYq89bho2Ifze4URTqRkcwR399hWoTrTkbZ/XJYDgP6rc7pRgffEQ==,
       }
 
   emoji-regex@10.4.0:
@@ -2365,6 +2392,19 @@ snapshots:
     transitivePeerDependencies:
       - zod
 
+  "@langchain/langgraph-checkpoint@0.0.9(@langchain/core@0.3.7(openai@4.67.1(zod@3.23.8)))":
+    dependencies:
+      "@langchain/core": 0.3.7(openai@4.67.1(zod@3.23.8))
+      uuid: 10.0.0
+
+  "@langchain/langgraph@0.2.11(@langchain/core@0.3.7(openai@4.67.1(zod@3.23.8)))":
+    dependencies:
+      "@langchain/core": 0.3.7(openai@4.67.1(zod@3.23.8))
+      "@langchain/langgraph-checkpoint": 0.0.9(@langchain/core@0.3.7(openai@4.67.1(zod@3.23.8)))
+      double-ended-queue: 2.1.0-0
+      uuid: 10.0.0
+      zod: 3.23.8
+
   "@langchain/openai@0.3.5(@langchain/core@0.3.7(openai@4.67.1(zod@3.23.8)))":
     dependencies:
       "@langchain/core": 0.3.7(openai@4.67.1(zod@3.23.8))
@@ -2679,6 +2719,8 @@ snapshots:
       dom-serializer: 2.0.0
       domelementtype: 2.3.0
       domhandler: 5.0.3
+
+  double-ended-queue@2.1.0-0: {}
 
   emoji-regex@10.4.0: {}
 
