@@ -1,41 +1,30 @@
-import { ChatOpenAI, OpenAIEmbeddings } from "@langchain/openai";
-import { HNSWLib } from "@langchain/community/vectorstores/hnswlib";
-import { formatDocumentsAsString } from "langchain/util/document";
-import { PromptTemplate } from "@langchain/core/prompts";
-import {
-  RunnableSequence,
-  RunnablePassthrough,
-} from "@langchain/core/runnables";
-import { StringOutputParser } from "@langchain/core/output_parsers";
+import { CheerioWebBaseLoader } from "@langchain/community/document_loaders/web/cheerio";
+import { GoogleGenerativeAIEmbeddings } from "@langchain/google-genai";
+import { RecursiveCharacterTextSplitter } from "@langchain/textsplitters";
+import { MemoryVectorStore } from "langchain/vectorstores/memory";
 
-const model = new ChatGoogleGenerativeAI({
-  modelName: "gemini-1.5-flash",
-  maxOutputTokens: 2048,
-});
+const urls = [
+  "https://lilianweng.github.io/posts/2023-06-23-agent/",
+  "https://lilianweng.github.io/posts/2023-03-15-prompt-engineering/",
+  "https://lilianweng.github.io/posts/2023-10-25-adv-attack-llm/",
+];
 
-const vectorStore = await HNSWLib.fromTexts(
-  ["mitochondria is the powerhouse of the cell"],
-  [{ id: 1 }],
-  new OpenAIEmbeddings(),
+const docs = await Promise.all(
+  urls.map((url) => new CheerioWebBaseLoader(url).load()),
 );
+const docsList = docs.flat();
+
+const textSplitter = new RecursiveCharacterTextSplitter({
+  chunkSize: 500,
+  chunkOverlap: 50,
+});
+const docSplits = await textSplitter.splitDocuments(docsList);
+
+// Add to vectorDB
+const vectorStore = await MemoryVectorStore.fromDocuments(
+  docSplits,
+  new GoogleGenerativeAIEmbeddings(),
+);
+
 const retriever = vectorStore.asRetriever();
-
-const prompt =
-  PromptTemplate.fromTemplate(`Answer the question based only on the following context:
-{context}
-
-Question: {question}`);
-
-const chain = RunnableSequence.from([
-  {
-    context: retriever.pipe(formatDocumentsAsString),
-    question: new RunnablePassthrough(),
-  },
-  prompt,
-  model,
-  new StringOutputParser(),
-]);
-
-const result = await chain.invoke("What is the powerhouse of the cell?");
-
-console.log(result);
+console.log(retriever);
