@@ -9,7 +9,7 @@
     "prepare": "husky",
     "prettier": "npx prettier --check .",
     "prettier:fix": "npx prettier --write .",
-    "start": "node src/index.js"
+    "start": "bun src/index.ts"
   },
   "dependencies": {
     "@eslint/js": "^9.11.1",
