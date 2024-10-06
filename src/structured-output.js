@@ -9,10 +9,10 @@ const model = new ChatGoogleGenerativeAI({
 
 const library = z.object({
   intent: z.string().describe("The intent of the message"),
-  amount: z.string().describe("The quantity asked for ranging from 0 to 100"),
+  amount: z.number().describe("The quantity asked for ranging from 0 to 100"),
   unit: z.string().describe("Units for action"),
   delay: z
-    .string()
+    .number()
     .describe("The delay asked for in seconds. If unknown return 0"),
   summary: z.string().describe("Summary of the action"),
   suggestions: z
