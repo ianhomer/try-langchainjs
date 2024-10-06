@@ -1,2 +1,6 @@
-# export GOOGLE_API_KEY=your-secret-key
-# export LANGCHAIN_TRACING_V2="true"
+# export GOOGLE_API_KEY=your-google-ai-secret-key
+# export LANGCHAIN_TRACING_V2=true
+# export LANGCHAIN_ENDPOINT="https://api.smith.langchain.com"
+# export LANGCHAIN_API_KEY=your-langhain-secret-key
+# export LANGCHAIN_PROJECT=your-langchain-project
+

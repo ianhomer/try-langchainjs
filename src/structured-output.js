@@ -1,5 +1,6 @@
 import { ChatGoogleGenerativeAI } from "@langchain/google-genai";
 import { z } from "zod";
+import process from "process";
 
 const model = new ChatGoogleGenerativeAI({
   modelName: "gemini-1.5-flash",
@@ -7,13 +8,25 @@ const model = new ChatGoogleGenerativeAI({
 });
 
 const library = z.object({
-  name: z.string().describe("The name of the library"),
-  provider: z.string().describe("The developer of the library"),
-  created: z.number().describe("The year that the library was created"),
-  popularity: z.number().describe("How popular the library is, from 1 to 10"),
-  notes: z.string().describe("Full details"),
+  intent: z.string().describe("The intent of the message"),
+  amount: z.string().describe("The quantity asked for ranging from 0 to 100"),
+  unit: z.string().describe("Units for action"),
+  delay: z
+    .string()
+    .describe("The delay asked for in seconds. If unknown return 0"),
+  summary: z.string().describe("Summary of the action"),
+  suggestions: z
+    .string()
+    .describe(
+      "Options for what could be done next as semi colon separated list",
+    ),
+  tone: z.string().describe("What was the tone and mood of the request?"),
 });
-const response = await model
-  .withStructuredOutput(library)
-  .invoke("Give top JS library is good for logging");
+
+const DEFAULT_MESSAGE =
+  "Can you turn the volume to a quiet level in 10 minutes?";
+const args = process.argv.slice(2);
+const message = args.length > 0 ? args.join(" ") : DEFAULT_MESSAGE;
+
+const response = await model.withStructuredOutput(library).invoke(message);
 console.log(response);
